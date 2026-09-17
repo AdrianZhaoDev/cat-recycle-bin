@@ -1,0 +1,12 @@
+Third-party notices for Cat Recycle Bin
+
+The app uses Three.js 0.186.0 (MIT) in its webview bundle. Its license is
+included in licenses/three-MIT.txt.
+
+The app uses Tauri 2.11.5 and @tauri-apps/api 2.11.1 (MIT OR Apache-2.0).
+Their license texts are included in licenses/tauri-MIT.txt and
+licenses/tauri-APACHE-2.0.txt.
+
+Other build and runtime dependencies are listed with exact versions in
+Cargo.lock and package-lock.json. Each retains its own license. Microsoft
+WebView2 is a Windows prerequisite and is not bundled in this ZIP.

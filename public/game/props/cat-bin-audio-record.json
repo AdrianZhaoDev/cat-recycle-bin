@@ -1,0 +1,63 @@
+{
+  "license": "CC0-1.0",
+  "source": "Original deterministic synthesis; no samples, recordings, voice, or third-party audio.",
+  "generator": "tools/generate-cat-bin-audio.mjs",
+  "mixIntent": "Quiet, short cat-robot bin feedback with PCM edge fades; final loudness remains subject to in-game listening review.",
+  "runtimeGain": {
+    "webAudio": 0.34,
+    "htmlAudioFallback": 0.32
+  },
+  "retriggerProtectionMs": {
+    "global": 105,
+    "open": 420,
+    "close": 280,
+    "receive": 140
+  },
+  "effects": [
+    {
+      "name": "cat-bin-open",
+      "file": "assets/game/props/cat-bin-open.wav",
+      "description": "Soft servo chirp followed by a small rising bell.",
+      "duration": 0.31,
+      "sampleRate": 32000,
+      "channels": 1,
+      "bitDepth": 16,
+      "peak": 0.114990234375,
+      "peakDbfs": -18.786780816777565,
+      "rms": 0.03860527928150623,
+      "firstSample": 0,
+      "lastSample": 0,
+      "sha256": "e028cf8827ad1c846c01865b4fad8e38e2a66b8b2926f88ebe6f2bf4daa11279"
+    },
+    {
+      "name": "cat-bin-close",
+      "file": "assets/game/props/cat-bin-close.wav",
+      "description": "Light mechanical tap with a warm downward pluck.",
+      "duration": 0.22,
+      "sampleRate": 32000,
+      "channels": 1,
+      "bitDepth": 16,
+      "peak": 0.095001220703125,
+      "peakDbfs": -20.445416285544052,
+      "rms": 0.02498063118805847,
+      "firstSample": 0,
+      "lastSample": 0,
+      "sha256": "ad55b4b0cc12a3bb8226022178e97a70314fed0cd40bb225981fd53510ee405d"
+    },
+    {
+      "name": "cat-bin-receive",
+      "file": "assets/game/props/cat-bin-receive.wav",
+      "description": "Three quiet rising bell notes for a happy receipt.",
+      "duration": 0.43,
+      "sampleRate": 32000,
+      "channels": 1,
+      "bitDepth": 16,
+      "peak": 0.1199951171875,
+      "peakDbfs": -18.416728515992396,
+      "rms": 0.031113767714971194,
+      "firstSample": 0,
+      "lastSample": 0,
+      "sha256": "b5415aacd107d968b8d464438b6d9e02c325657b9e13b5db3c6ac0d00cf53231"
+    }
+  ]
+}

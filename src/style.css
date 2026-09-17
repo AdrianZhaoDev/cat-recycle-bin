@@ -1,0 +1,8 @@
+:root { background: transparent; color-scheme: dark; font-family: "Segoe UI", sans-serif; }
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: transparent; }
+#trash-bin { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; padding: 0; background: transparent; cursor: grab; filter: drop-shadow(0 3px 2px rgb(0 0 0 / 25%)); }
+#trash-bin:active { cursor: grabbing; }
+#trash-bin:focus-visible { outline: 1px dashed #da9b69; outline-offset: -3px; border-radius: 18px; }
+#bin-canvas { display: block; width: 100%; height: 100%; pointer-events: none; }
+.fallback { position: absolute; inset: 30% 0; font-size: 28px; }
+.model-ready .fallback { display: none; }

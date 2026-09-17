@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "asset": "bin-cat",
+  "status": "pass",
+  "glb": {
+    "bytes": 1193440,
+    "sha256": "857899593664321b0859fe8f588a695c9b8491fe420febae2196bfb340b81bbf"
+  },
+  "meshes": 72,
+  "triangles": 42252,
+  "nodes": 75,
+  "materials": [
+    "CatEar_PeachInset",
+    "DiscardedPaper_Ivory",
+    "EyeWarm_Emissive",
+    "FrontPanel_Ivory",
+    "HazardStripe_Mustard",
+    "InnerLiner_Charcoal",
+    "Markings_WarmGraphite",
+    "Mechanical_BrushedSteel",
+    "Mechanical_DarkMetal",
+    "Shell_CreamWorn",
+    "Shell_EdgeWarm",
+    "SideLampWarm_Emissive",
+    "Strap_EdgeThread",
+    "Strap_OrangeFabric",
+    "Wear_RustAccent"
+  ],
+  "animations": [
+    {
+      "name": "BinIdle",
+      "durationSeconds": 1
+    },
+    {
+      "name": "BinOpen",
+      "durationSeconds": 0.5
+    },
+    {
+      "name": "BinClose",
+      "durationSeconds": 0.5
+    }
+  ],
+  "boundsClosed": {
+    "min": [
+      -0.8300000171345983,
+      0,
+      -0.5660000145435333
+    ],
+    "max": [
+      0.6634999960660934,
+      1.506515622138977,
+      0.5929954648017883
+    ],
+    "size": [
+      1.4935000132006917,
+      1.506515622138977,
+      1.1589954793453217
+    ]
+  },
+  "boundsOpen": {
+    "min": [
+      -0.8300000171345983,
+      0,
+      -1.0937939456803063
+    ],
+    "max": [
+      0.6634999960660934,
+      2.072901728105462,
+      0.5929954648017883
+    ],
+    "size": [
+      1.4935000132006917,
+      2.072901728105462,
+      1.6867894104820946
+    ]
+  },
+  "embeddedImages": 1,
+  "checks": [
+    "GLB 2.0 has no external buffer/image URIs",
+    "Required runtime nodes and materials exist",
+    "Closed model is grounded and within the agreed envelope",
+    "BinOpen samples the named hinge to 105 degrees without crossing the ground",
+    "BinIdle/BinOpen/BinClose names and durations are present"
+  ]
+}

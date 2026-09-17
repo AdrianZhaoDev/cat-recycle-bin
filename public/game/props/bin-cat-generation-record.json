@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "asset": "bin-cat",
+  "authoring": "Original procedural Blender geometry; no reference image pixels are used in the model",
+  "generator": "tools/build-cat-bin.py",
+  "blenderVersion": "5.2.1 LTS",
+  "coordinates": {
+    "up": "+Y",
+    "front": "+Z",
+    "groundY": 0
+  },
+  "closedBoundsApprox": {
+    "min": [
+      -0.83,
+      0.0,
+      -0.566
+    ],
+    "max": [
+      0.6635,
+      1.5065,
+      0.593
+    ],
+    "size": [
+      1.4935,
+      1.5065,
+      1.159
+    ]
+  },
+  "bodyDimensions": {
+    "width": 1.3,
+    "heightWithoutLid": 1.14,
+    "depth": 1.0
+  },
+  "closedHeightTarget": 1.52,
+  "openBoundsMeasuredFromSourcePose": {
+    "min": [
+      -0.83,
+      0.0,
+      -1.0938
+    ],
+    "max": [
+      0.6635,
+      2.0729,
+      0.593
+    ],
+    "size": [
+      1.4935,
+      2.0729,
+      1.6868
+    ]
+  },
+  "openHeightMeasuredFromSourcePose": 2.0729,
+  "hinge": {
+    "node": "BinCat_LidHinge",
+    "position": [
+      0.0,
+      1.105,
+      -0.485
+    ],
+    "axis": "local X",
+    "closedDegrees": 0.0,
+    "openDegrees": -105.0
+  },
+  "animations": {
+    "BinIdle": {
+      "durationSeconds": 1.0,
+      "loop": true
+    },
+    "BinOpen": {
+      "durationSeconds": 0.5,
+      "loop": false
+    },
+    "BinClose": {
+      "durationSeconds": 0.5,
+      "loop": false
+    }
+  },
+  "runtimeControls": {
+    "defaultEyes": [
+      "Eye_L",
+      "Eye_R"
+    ],
+    "happyEyes": [
+      "HappyEye_L",
+      "HappyEye_R"
+    ],
+    "happyEyesDefaultVisible": false,
+    "eyeMaterial": "EyeWarm_Emissive",
+    "sideLampMaterial": "SideLampWarm_Emissive"
+  },
+  "detailNotes": [
+    "Actual boolean-cut opening with a recessed charcoal bucket and visible paper contents",
+    "Cat-ear dome lid, rear pin and alternating hinge knuckles",
+    "Independent warm eye meshes plus optional happy arc meshes",
+    "Layered mechanical side lamp with emissive lens and four fasteners",
+    "Orange strap with raised edges and KEEP DESKTOP CLEAN mesh lettering",
+    "07, CLEAN A BETTER TOMORROW, mustard hazard slashes, seams, screws, scuffs",
+    "Packed deterministic shell wear texture embedded by GLB export"
+  ],
+  "files": {
+    "bin-cat.glb": {
+      "bytes": 1193440,
+      "sha256": "857899593664321b0859fe8f588a695c9b8491fe420febae2196bfb340b81bbf"
+    },
+    "bin-cat-source.blend": {
+      "bytes": 707329,
+      "sha256": "c87cb083fbf979aa96e807231e2faf94fa1e30290a2a83eb2276ef00902bc689"
+    },
+    "bin-cat-preview.png": {
+      "bytes": 1033715,
+      "sha256": "67b7f354d6f6b3195ecb62a34ed0bdfe67c39b5bf23329809a6991d191cd6642"
+    },
+    "bin-cat-preview-open.png": {
+      "bytes": 993887,
+      "sha256": "a370bbc987a24a46f0769cba83a4e7bda51bad14257a238b2bc7428e213612f8"
+    },
+    "bin-cat-shell-basecolor.png": {
+      "bytes": 59194,
+      "sha256": "1b635740e998b028fe7243fb43beb856dc02bba71810e0c22c17c4898f9725dc"
+    }
+  }
+}
