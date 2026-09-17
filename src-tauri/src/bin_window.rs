@@ -94,7 +94,9 @@ pub fn resize(app: &tauri::AppHandle, scale_percent: u16) -> Result<(), String> 
     let monitor = window
         .current_monitor()
         .map_err(|error| error.to_string())?
-        .or(window.primary_monitor().map_err(|error| error.to_string())?)
+        .or(window
+            .primary_monitor()
+            .map_err(|error| error.to_string())?)
         .ok_or("找不到显示器")?;
     let factor = window.scale_factor().map_err(|error| error.to_string())?;
     let (width_dip, height_dip) = logical_size(scale_percent);

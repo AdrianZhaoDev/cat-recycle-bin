@@ -2,12 +2,12 @@ import "./style.css";
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import * as THREE from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { GLTFLoader, type GLTF } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { CatBinAudio } from "./cat-bin-audio";
 import { BinMotion } from "./bin-motion";
 
-type BinSettings = { confirmDelete: boolean; soundEnabled: boolean; scalePercent: number };
+type BinSettings = { confirmDelete: boolean; soundEnabled: boolean; scalePercent: number; modelName?: string };
 type BinResult = { ok: boolean; error?: string; cancelled?: boolean };
 
 const native = "__TAURI_INTERNALS__" in window;
@@ -26,6 +26,9 @@ let previous = performance.now();
 let binModel: THREE.Group | undefined;
 let lidMixer: THREE.AnimationMixer | undefined;
 let lidAction: THREE.AnimationAction | undefined;
+let customModel = false;
+let modelBaseScale = 1;
+let modelLoadEpoch = 0;
 const eyes: THREE.Object3D[] = [];
 const happyEyes: THREE.Object3D[] = [];
 const eyeMaterials = new Set<THREE.MeshStandardMaterial>();
@@ -91,6 +94,7 @@ if (native) {
   void invoke<BinSettings>("get_settings")
     .then(settings => { audio.enabled = settings.soundEnabled; })
     .catch(console.warn);
+  void listen("bin://model-changed", () => { void loadModel(); });
   void listen("tauri://drag-enter", () => { dragOver = true; });
   void listen("tauri://drag-leave", () => { dragOver = false; });
   void listen("tauri://drag-drop", () => { dragOver = false; busy = true; });
@@ -114,24 +118,67 @@ if (native) {
   }, 80);
 }
 
-async function boot(): Promise<void> {
-  const gltf = await new GLTFLoader().loadAsync("/game/props/bin-cat.glb");
-  binModel = gltf.scene;
-  scene.add(gltf.scene);
-  gltf.scene.traverse(object => {
-    if (/^Eye_[LR]$/.test(object.name)) eyes.push(object);
-    if (/^HappyEye_[LR]$/.test(object.name)) { happyEyes.push(object); object.visible = false; }
-    if (object instanceof THREE.Mesh) {
-      const materials = Array.isArray(object.material) ? object.material : [object.material];
-      for (const material of materials) {
-        if (material instanceof THREE.MeshStandardMaterial && material.name === "EyeWarm_Emissive") {
-          eyeMaterials.add(material);
-        }
+function disposeModel(root: THREE.Object3D): void {
+  root.traverse(object => {
+    if (!(object instanceof THREE.Mesh)) return;
+    object.geometry.dispose();
+    const materials = Array.isArray(object.material) ? object.material : [object.material];
+    for (const material of materials) {
+      for (const value of Object.values(material)) {
+        if (value instanceof THREE.Texture && value !== environment.texture) value.dispose();
       }
+      material.dispose();
     }
   });
+}
+
+function mountModel(gltf: GLTF, isCustom: boolean): void {
+  const holder = new THREE.Group();
+  holder.add(gltf.scene);
+  let nextScale = 1;
+  if (isCustom) {
+    const box = new THREE.Box3().setFromObject(holder);
+    const size = box.getSize(new THREE.Vector3());
+    const longest = Math.max(size.x, size.y, size.z);
+    if (box.isEmpty() || !Number.isFinite(longest) || longest <= 0) {
+      disposeModel(holder);
+      throw new Error("模型没有可显示的 3D 几何体");
+    }
+    nextScale = 1.7 / longest;
+    holder.scale.setScalar(nextScale);
+    holder.updateMatrixWorld(true);
+    const center = new THREE.Box3().setFromObject(holder).getCenter(new THREE.Vector3());
+    holder.position.set(-center.x, 1.04 - center.y, -center.z);
+  }
+  if (binModel) {
+    scene.remove(binModel);
+    lidMixer?.stopAllAction();
+    disposeModel(binModel);
+  }
+  binModel = holder;
+  customModel = isCustom;
+  modelBaseScale = nextScale;
+  eyes.length = 0;
+  happyEyes.length = 0;
+  eyeMaterials.clear();
+  scene.add(holder);
+  if (!isCustom) {
+    gltf.scene.traverse(object => {
+      if (/^Eye_[LR]$/.test(object.name)) eyes.push(object);
+      if (/^HappyEye_[LR]$/.test(object.name)) { happyEyes.push(object); object.visible = false; }
+      if (object instanceof THREE.Mesh) {
+        const materials = Array.isArray(object.material) ? object.material : [object.material];
+        for (const material of materials) {
+          if (material instanceof THREE.MeshStandardMaterial && material.name === "EyeWarm_Emissive") {
+            eyeMaterials.add(material);
+          }
+        }
+      }
+    });
+  }
   lidMixer = new THREE.AnimationMixer(gltf.scene);
-  const clip = gltf.animations.find(animation => animation.name === "BinOpen");
+  const clip = isCustom ? gltf.animations[0] : gltf.animations.find(animation => animation.name === "BinOpen");
+  lidAction = undefined;
   if (clip) {
     lidAction = lidMixer.clipAction(clip);
     lidAction.setLoop(THREE.LoopOnce, 1);
@@ -141,10 +188,32 @@ async function boot(): Promise<void> {
   }
   button.classList.add("model-ready");
 }
-void boot().catch(error => {
-  button.title = `垃圾桶模型加载失败：${String(error)}`;
-  console.error(error);
-});
+
+async function loadModel(): Promise<void> {
+  const epoch = ++modelLoadEpoch;
+  let isCustom = false;
+  try {
+    const settings = native ? await invoke<BinSettings>("get_settings") : undefined;
+    isCustom = Boolean(settings?.modelName);
+    const loader = new GLTFLoader();
+    const gltf = isCustom
+      ? await loader.parseAsync(Uint8Array.from(atob(await invoke<string>("read_active_model")), char => char.charCodeAt(0)).buffer, "")
+      : await loader.loadAsync("/game/props/bin-cat.glb");
+    if (epoch !== modelLoadEpoch) { disposeModel(gltf.scene); return; }
+    mountModel(gltf, isCustom);
+    button.title = isCustom
+      ? `${settings?.modelName} · 拖入文件回收 · 右键更换模型`
+      : "猫咪回收站 · 拖入文件回收 · 右键设置";
+  } catch (error) {
+    if (epoch !== modelLoadEpoch) return;
+    console.error(error);
+    button.title = `模型加载失败：${String(error)}`;
+    if (isCustom && native) {
+      void invoke("model_load_failed", { reason: String(error) }).catch(console.error);
+    }
+  }
+}
+void loadModel();
 
 function frame(now: number): void {
   const dt = Math.min((now - previous) / 1000, .05);
@@ -153,6 +222,7 @@ function frame(now: number): void {
   const sound = motion.step(dt, active, reducedMotion.matches);
   const openness = motion.openness;
   if (sound && binModel) audio.play(sound);
+  if (customModel && binModel) binModel.scale.setScalar(modelBaseScale * (1 + openness * .045));
   if (lidAction && lidMixer) {
     lidAction.time = motion.pose * lidAction.getClip().duration;
     lidMixer.update(0);

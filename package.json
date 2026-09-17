@@ -1,7 +1,7 @@
 {
   "name": "cat-recycle-bin",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,7 +11,9 @@
     "desktop:build": "tauri build",
     "tauri": "tauri"
   },
-  "engines": { "node": ">=24.0.0 <25" },
+  "engines": {
+    "node": ">=24.0.0 <25"
+  },
   "dependencies": {
     "@tauri-apps/api": "2.11.1",
     "three": "0.186.0"

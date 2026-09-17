@@ -27,6 +27,8 @@ pub struct Settings {
     pub sound_enabled: bool,
     #[serde(default = "default_scale")]
     pub scale_percent: u16,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub model_name: Option<String>,
 }
 
 impl Default for Settings {
@@ -35,6 +37,7 @@ impl Default for Settings {
             confirm_delete: true,
             sound_enabled: true,
             scale_percent: default_scale(),
+            model_name: None,
         }
     }
 }
@@ -104,6 +107,10 @@ pub fn set_scale(app: &AppHandle, value: u16) -> Result<Settings, String> {
     update(app, |settings| settings.scale_percent = value)
 }
 
+pub fn set_model_name(app: &AppHandle, name: Option<String>) -> Result<Settings, String> {
+    update(app, |settings| settings.model_name = name)
+}
+
 fn update(app: &AppHandle, change: impl FnOnce(&mut Settings)) -> Result<Settings, String> {
     let state = app.state::<SettingsState>();
     let mut guard = state.0.lock().map_err(|error| error.to_string())?;
@@ -126,6 +133,7 @@ mod tests {
         assert!(settings.confirm_delete);
         assert!(settings.sound_enabled);
         assert_eq!(settings.scale_percent, 200);
+        assert!(settings.model_name.is_none());
         assert_eq!(
             serde_json::to_value(settings).unwrap(),
             serde_json::json!({
@@ -150,6 +158,7 @@ mod tests {
             confirm_delete: false,
             sound_enabled: false,
             scale_percent: 150,
+            model_name: Some("other.glb".into()),
         };
         write_settings(&path, &modified).unwrap();
         let loaded = read_settings(&path).unwrap();
@@ -157,5 +166,6 @@ mod tests {
         assert!(!loaded.confirm_delete);
         assert!(!loaded.sound_enabled);
         assert_eq!(loaded.scale_percent, 150);
+        assert_eq!(loaded.model_name.as_deref(), Some("other.glb"));
     }
 }

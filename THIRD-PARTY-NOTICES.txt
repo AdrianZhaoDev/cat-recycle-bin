@@ -3,7 +3,8 @@ Third-party notices for Cat Recycle Bin
 The app uses Three.js 0.186.0 (MIT) in its webview bundle. Its license is
 included in licenses/three-MIT.txt.
 
-The app uses Tauri 2.11.5 and @tauri-apps/api 2.11.1 (MIT OR Apache-2.0).
+The app uses Tauri 2.11.5, @tauri-apps/api 2.11.1, and
+tauri-plugin-dialog 2.7.3 (MIT OR Apache-2.0).
 Their license texts are included in licenses/tauri-MIT.txt and
 licenses/tauri-APACHE-2.0.txt.
 

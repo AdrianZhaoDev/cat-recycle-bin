@@ -1,5 +1,6 @@
 mod bin_window;
 mod controls;
+mod model;
 mod recycle_bin;
 mod settings;
 
@@ -30,6 +31,7 @@ fn cursor_position_local(window: tauri::WebviewWindow) -> Result<CursorPoint, St
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
         .setup(|app| {
             let initial = settings::load(app.handle());
             app.manage(settings::SettingsState(std::sync::Mutex::new(
@@ -67,6 +69,8 @@ pub fn run() {
             recycle_bin::open_recycle_bin,
             cursor_position_local,
             settings::get_settings,
+            model::read_active_model,
+            model::model_load_failed,
             controls::show_bin_menu,
         ])
         .run(tauri::generate_context!())

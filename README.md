@@ -8,9 +8,9 @@ A tiny animated Windows Recycle Bin, extracted from the cat bin in Desktop Creat
 
 The GIF is an illustrated UI preview. The still image below is captured from the actual Windows app. / GIF 为交互演示动画；下方静态图截取自实际运行的 Windows 程序。
 
-| 3D model preview / 模型预览 | Running Windows app at 200% / 200% 尺寸实际运行 |
-| --- | --- |
-| ![Cat bin model preview](docs/images/model-preview.png) | ![Actual running Windows bin](docs/images/runtime-200pct.jpg) |
+| 3D model preview / 模型预览 | Running Windows app at 200% / 200% 尺寸实际运行 | Custom model preview / 替换模型预览 |
+| --- | --- | --- |
+| ![Cat bin model preview](docs/images/model-preview.png) | ![Actual running Windows bin](docs/images/runtime-200pct.jpg) | ![Custom color cube model](docs/images/custom-model-preview.png) |
 
 ## English
 
@@ -21,12 +21,15 @@ The GIF is an illustrated UI preview. The still image below is captured from the
 - Double-click to open the system Recycle Bin. Right-click the bin or use its tray icon for settings and exit.
 - **Confirm before recycling** is on by default and can be turned off. The preference is saved.
 - Choose 100%, 150%, 200%, or 300% display size. The default is 200%; 100% restores the original 76 × 88 window. The renderer also uses extra pixel sampling for cleaner edges.
+- Choose **Change 3D model (GLB)** from the bin or tray menu to import a self-contained glTF 2.0 `.glb` file. The app copies it into its own settings directory, fits it automatically, and keeps it after restart. The first animation, when present, responds to hover. Choose **Restore default cat model** to switch back.
 
 ### Download and use
 
 Download the Windows ZIP from [Releases](https://github.com/AdrianZhaoDev/cat-recycle-bin/releases/latest), extract it, and run `cat-recycle-bin.exe`. WebView2 is required. Move the bin by dragging it with the left mouse button.
 
 The app accepts real file-system paths on fixed local disks. It refuses network and removable volumes, drive roots, paths inside the Recycle Bin, its own executable and configuration data, and overlapping parent/child paths in one drop. If Windows cannot recycle an item, it may show a separate **permanent deletion** warning; cancel that system warning if you need the item to remain recoverable.
+
+To try model replacement, download [the sample color cube](examples/color-cube.glb), then right-click the bin and select **Change 3D model (GLB)**. Use the menu to import models; dropping a file onto the bin requests recycling. GLB files must contain their textures and data and be at most 25 MB. The model changes the appearance; recycling behavior and settings remain available.
 
 ### Build from source
 
@@ -50,12 +53,15 @@ The executable is written to `src-tauri/target/release/cat-recycle-bin.exe`. The
 - 双击打开系统回收站；右键垃圾桶或点击托盘图标可打开设置和退出。
 - **删除前提醒** 默认开启，可关闭，设置会保存。
 - 可选 100%、150%、200%、300% 尺寸。默认 200%；100% 是原来的 76 × 88 窗口。渲染器同时提高内部采样，改善边缘清晰度。
+- 在垃圾桶右键菜单或托盘菜单选择 **更换 3D 模型（GLB）**，可导入独立的 glTF 2.0 `.glb` 文件。程序会复制到自己的配置目录，自动居中缩放，重启后继续使用；如果模型带动画，第一段动画会响应悬浮。选择 **恢复默认猫咪模型** 即可切回。
 
 ### 下载与使用
 
 从 [Releases](https://github.com/AdrianZhaoDev/cat-recycle-bin/releases/latest) 下载 Windows ZIP，解压后运行 `cat-recycle-bin.exe`。需要 WebView2。按住左键拖动垃圾桶即可调整位置。
 
 程序接收固定本地磁盘上具有实际路径的文件和文件夹。网络位置、可移动卷、磁盘根目录、回收站内部、程序及配置数据，以及同批次重复或父子重叠的路径会被拒绝。如果 Windows 无法将项目放入回收站，系统可能另弹 **永久删除** 警告；想保留可恢复性时，请取消该系统警告。
+
+可以先下载[彩色立方体示例](examples/color-cube.glb)，右键垃圾桶选择 **更换 3D 模型（GLB）** 试用。请通过菜单导入模型；把文件拖入垃圾桶仍会请求回收。GLB 需要自带纹理与数据，大小不超过 25 MB。替换的是外观，回收功能与设置继续可用。
 
 ### 从源码构建
 
